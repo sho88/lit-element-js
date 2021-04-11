@@ -1,12 +1,14 @@
-import { LitElement, html } from "lit-element";
 import { decorator } from './util';
 import { UserService } from './user.service';
+import { template } from './application.template';
 
-const services = [UserService];
-const events = [
-  { name: 'title-click', bubbles: true }
-]
-export class ApplicationComponent extends decorator(LitElement, services, events) {
+const Component = decorator({
+  view: template,
+  services: [UserService],
+  dependencies: [],
+  events: [{ name: 'title-click', bubbles: true }],
+})
+export class ApplicationComponent extends Component {
   static get properties() {
     return {
       title: { type: String },
@@ -18,17 +20,8 @@ export class ApplicationComponent extends decorator(LitElement, services, events
     super();
     this.userService.getUsers().then(
       users => this.users = [...users],
-      error => console.error(error)
+      error => console.error(error),
     );
-  }
-
-  render() {
-    return html`
-      <div>
-        <h1 @click="${this.onClick}">Hello ${this.title}</h1>
-        <pre>${JSON.stringify(this.users, null, 2)}</pre>
-      </div>
-    `;
   }
 
   // events go here -----------------------------------------------------------

@@ -1,5 +1,7 @@
-export function decorator(superclass, services = [], events = []) {
-  return class extends superclass {
+import { LitElement } from 'lit-element';
+
+export function decorator({ events, services, view }) {
+  return class extends LitElement {
     constructor() {
       super();
       if (events && Array.isArray(events)) {
@@ -12,6 +14,10 @@ export function decorator(superclass, services = [], events = []) {
       });
     }
 
+    render() {
+      return view(this);
+    }
+
     emit(name, detail, bubbles = false) {
       const find = this.eventsList.find(event => event.name === name);
       if (!find) {
@@ -20,5 +26,5 @@ export function decorator(superclass, services = [], events = []) {
 
       this.dispatchEvent(new CustomEvent(name, { detail, bubbles, composed: bubbles }));
     }
-  };
+  }
 }
